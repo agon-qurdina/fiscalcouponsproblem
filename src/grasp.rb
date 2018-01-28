@@ -1,4 +1,4 @@
-require 'deep_clone'
+require "deep_clone"
 class Grasp
   attr_accessor :envelope_types, :best_solution, :available_coupons, :random_percentage, :random_count, :max_no_improvement, :max_iterations, :mode, :algorithm_metrics, :time_diff
 
@@ -55,7 +55,7 @@ class Grasp
     all_coupons = self.available_coupons
     while index < max_iterations
       time = Time.new
-      self.available_coupons = all_coupons.clone
+      self.available_coupons = DeepClone.clone(all_coupons)
       solution = initial_greedy_solution
       self.time_diff = (Time.new - time)
       cost = solution.cost
@@ -113,7 +113,7 @@ class Grasp
         initial_greedy_solution(candidate_solution, envelope_type_index + 1)
       end
     end
-    candidate_solution.unassigned_coupons = self.available_coupons.clone #DeepClone.clone(self.available_coupons)
+    candidate_solution.unassigned_coupons = DeepClone.clone(self.available_coupons)
     candidate_solution
   end
 
@@ -159,7 +159,7 @@ class Grasp
   end
 
   def tweak(solution)
-    candidate_solution = solution.clone #DeepClone.clone(solution)
+    candidate_solution = DeepClone.clone(solution)
     length = candidate_solution.envelopes.length
     rand1 = rand(length)
     rand2 = rand(length)
@@ -197,5 +197,27 @@ class Grasp
 
 
     # envelopes[val1].coupons[index1], envelopes[val2].coupons[index2] = envelopes[val2].coupons[index2], envelopes[val1].coupons[index1]
+  end
+end
+
+class Object
+  def deep_clone
+    return @deep_cloning_obj if @deep_cloning
+    @deep_cloning_obj = clone
+    @deep_cloning_obj.instance_variables.each do |var|
+      val = @deep_cloning_obj.instance_variable_get(var)
+      begin
+        @deep_cloning = true
+        val = val.deep_clone
+      rescue TypeError
+        next
+      ensure
+        @deep_cloning = false
+      end
+      @deep_cloning_obj.instance_variable_set(var, val)
+    end
+    deep_cloning_obj = @deep_cloning_obj
+    @deep_cloning_obj = nil
+    deep_cloning_obj
   end
 end

@@ -12,7 +12,7 @@ best_parameters = [1,1000,7,0]
 # instances.each do |instance|
   instance = 'DFCP_Toy_Example';
   10.times do |i|
-    CSV.open("./storage/Instances_2018/#{instance}_E#{i}.csv", "wb") do |csv|
+    CSV.open("./storage/Instances_2018/Experiments/#{instance}_Cycle#{i}.csv", "wb") do |csv|
       csv << ["Time", "Fitnes"]
     end
     grasp = Grasp.new(best_parameters[0], best_parameters[1], best_parameters[2], best_parameters[3])
@@ -28,7 +28,7 @@ best_parameters = [1,1000,7,0]
     puts total_price
     puts 'times: '
     puts executions.inspect
-    CSV.open("./storage/Experiments2018/#{instance}_E#{i}.csv", "a+") do |csv|
+    CSV.open("./storage/Instances_2018/Experiments/#{instance}_Cycle#{i}.csv", "a+") do |csv|
       executions.each do |values|
         csv << [values[:time], values[:cost]]
       end
